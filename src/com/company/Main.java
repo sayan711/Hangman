@@ -1,5 +1,4 @@
 package com.company;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("words_alpha.txt"));
+        Scanner scanner = new Scanner(new File("20k.txt"));
         Scanner keyboard = new Scanner(System.in);
         List<String> words = new ArrayList<>();
         while (scanner.hasNext()) {
@@ -43,13 +42,40 @@ public class Main {
             if(wrongCount >= 5){
                 System.out.print("/ ");
                 if(wrongCount >= 6){
-                    System.out.print("\\");
+                    System.out.println("\\");
                 }
                 else{
                     System.out.println("");
                 }
             }
-            if(wrongCount >= 6){
+            if(wrongCount >= 7){
+                System.out.println(" ------- ");
+                System.out.println(" |     | ");
+                System.out.println(" o ");
+            }
+            if(wrongCount >= 8){
+                System.out.print("\\ ");
+                if(wrongCount >= 9){
+                    System.out.println("/");
+                }
+                else{
+                    System.out.print("");
+                }
+            }
+            if(wrongCount >= 10){
+                System.out.println(" |");
+            }
+            if(wrongCount >= 11){
+                System.out.print("/ ");
+                if(wrongCount >= 12){
+                    System.out.println("\\");
+                }
+                else{
+                    System.out.println("");
+                }
+            }
+
+            if(wrongCount >= 12){
                 System.out.println(" ");
                 System.out.println("You lose!");
                 System.out.println(word);
@@ -61,6 +87,7 @@ public class Main {
                 wrongCount++;
             }
             if(printWordState(word, playerGuesses)){
+                System.out.println("You win!");
                 break;
             }
             System.out.println("Please enter your guess for the word:");
