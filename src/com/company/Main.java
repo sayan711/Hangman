@@ -9,118 +9,47 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("20k.txt"));
-        Scanner keyboard = new Scanner(System.in);
-        List<String> words = new ArrayList<>();
-        while (scanner.hasNext()) {
-            words.add(scanner.nextLine());
-        }
-        Random rand = new Random();
-        String word = words.get(rand.nextInt(words.size()));
+        Round nextRound = new Round("20k.txt");
+        System.out.println("Welcome to hangman!");
+        boolean playAgain = true;
+        Scanner scan = new Scanner(System.in);
 
-
-        List<Character> playerGuesses = new ArrayList<>();
-        int wrongCount = 0;
-        while (true) {
-        System.out.println(" ------- ");
-        System.out.println(" |     | ");
-        if(wrongCount >= 1) {
-            System.out.println(" o ");
+       //While the user is in a new round and hasn't won or lost the round, the user will be asked to guess letters.
+        while(playAgain) {
+            while (!nextRound.hasLost() && !nextRound.hasWon()) {
+                System.out.println(nextRound.getCurrentState());
+                System.out.println("Guess a single letter of the alphabet.");
+                String guess = scan.next();
+                //If the user enters something that isn't a single letter it will print out the message.
+                while (guess.length() != 1 || !"abcdefghijklmnopqrstuvwxyz".contains(guess)) {
+                    System.out.println("Please pick a single letter of the alphabet.");
+                    guess = scan.nextLine();
+                }
+                nextRound.userGuess(guess.charAt(0));
+            }
+            //If the user has won the round it prints out the message and reveals the word.
+            if(nextRound.hasWon()) {
+                System.out.println("Congratulations you won!");
+                System.out.println("The word was " + nextRound.getTheWord());
+            }
+            scan.reset();
+            //If the user has lost the round it prints out the message and reveals the word.
+            if(nextRound.hasLost()){
+                System.out.println(nextRound.getCurrentState());
+                System.out.println("Game over you lose! The word was: " + nextRound.getTheWord());
+            }
+            nextRound = new Round("20k.txt");
+            scan = new Scanner(System.in);
+            String response = "";
+            //After the round if the user enters something that isn't y or n, it repeats the question.
+            while(!response.equals("y") && ! response.equals("n") ) {
+                System.out.println("Do you want to play again (y/n)?");
+                response = scan.nextLine();
+            }
+            //If the user enters y, a new round is started.
+            playAgain = response.equals("y");
         }
-        if(wrongCount >= 2){
-            System.out.print("\\ ");
-            if(wrongCount >= 3){
-                System.out.println("/");
-            }
-            else{
-                System.out.print("");
-            }
-        }
-        if(wrongCount >= 4){
-            System.out.println(" |");
-        }
-            if(wrongCount >= 5){
-                System.out.print("/ ");
-                if(wrongCount >= 6){
-                    System.out.println("\\");
-                }
-                else{
-                    System.out.println("");
-                }
-            }
-            if(wrongCount >= 7){
-                System.out.println(" ------- ");
-                System.out.println(" |     | ");
-                System.out.println(" o ");
-            }
-            if(wrongCount >= 8){
-                System.out.print("\\ ");
-                if(wrongCount >= 9){
-                    System.out.println("/");
-                }
-                else{
-                    System.out.print("");
-                }
-            }
-            if(wrongCount >= 10){
-                System.out.println(" |");
-            }
-            if(wrongCount >= 11){
-                System.out.print("/ ");
-                if(wrongCount >= 12){
-                    System.out.println("\\");
-                }
-                else{
-                    System.out.println("");
-                }
-            }
 
-            if(wrongCount >= 12){
-                System.out.println(" ");
-                System.out.println("You lose!");
-                System.out.println(word);
-                break;
-            }
-
-            printWordState(word, playerGuesses);
-            if(!getPlayerGuess(keyboard, word, playerGuesses)){
-                wrongCount++;
-            }
-            if(printWordState(word, playerGuesses)){
-                System.out.println("You win!");
-                break;
-            }
-            System.out.println("Please enter your guess for the word:");
-            if(keyboard.nextLine().equals(word)){
-                System.out.println("You win!");
-                break;
-            }
-            else{
-                System.out.println("Nope! Try again.");
-            }
-        }
-    }
-    private static boolean getPlayerGuess(Scanner keyboard, String word, List<Character> playerGuesses) {
-        System.out.println("Please enter a letter:");
-        String letterGuess = keyboard.nextLine();
-        playerGuesses.add(letterGuess.charAt(0));
-
-        return word.contains(letterGuess);
-    }
-
-    private static boolean printWordState(String word, List<Character> playerGuesses) {
-        int correctCount = 0;
-        for(int i = 0; i < word.length(); i++){
-            if(playerGuesses.contains(word.charAt(i))){
-                System.out.print((word.charAt(i)));
-                correctCount++;
-            }
-            else{
-                System.out.print("_");
-            }
-        }
-        System.out.println();
-        return (word.length() == correctCount);
     }
 }
 
